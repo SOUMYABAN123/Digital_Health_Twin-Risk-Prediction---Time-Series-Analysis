@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Health Twin UI</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        margin: 0;
+        padding: 24px;
+        color: #222;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: #fff;
+        padding: 24px;
+        border-radius: 14px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 28px;
+      }
+
+      p.subtitle {
+        color: #555;
+        margin-bottom: 24px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        font-size: 14px;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+
+      input,
+      select {
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      .actions {
+        margin-top: 20px;
+      }
+
+      button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        font-size: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #1d4ed8;
+      }
+
+      .result {
+        margin-top: 24px;
+        padding: 18px;
+        border-radius: 10px;
+        background: #f8fafc;
+        border: 1px solid #dbe3f0;
+      }
+
+      .result h2 {
+        margin-top: 0;
+        font-size: 22px;
+      }
+
+      .row {
+        margin: 10px 0;
+      }
+
+      .error {
+        color: #b91c1c;
+        margin-top: 12px;
+        font-weight: 600;
+      }
+
+      @media (max-width: 700px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Digital Health Twin</h1>
+      <p class="subtitle">Patient Risk Prediction Demo</p>
+
+      <div class="grid">
+        <div class="field">
+          <label for="age">Age</label>
+          <input type="number" id="age" value="62" />
+        </div>
+
+        <div class="field">
+          <label for="gender">Gender</label>
+          <select id="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="bmi">BMI</label>
+          <input type="number" step="0.1" id="bmi" value="31.4" />
+        </div>
+
+        <div class="field">
+          <label for="activity_level">Activity Level (0 to 1)</label>
+          <input type="number" step="0.01" id="activity_level" value="0.22" />
+        </div>
+
+        <div class="field">
+          <label for="medical_history">Medical History</label>
+          <select id="medical_history">
+            <option value="none">none</option>
+            <option value="hypertension">hypertension</option>
+            <option value="diabetes" selected>diabetes</option>
+            <option value="cardiac_history">cardiac_history</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="hr_mean">Heart Rate Mean</label>
+          <input type="number" step="0.1" id="hr_mean" value="86.5" />
+        </div>
+
+        <div class="field">
+          <label for="hr_std">Heart Rate Std</label>
+          <input type="number" step="0.1" id="hr_std" value="5.8" />
+        </div>
+
+        <div class="field">
+          <label for="bp_mean">BP Mean</label>
+          <input type="number" step="0.1" id="bp_mean" value="142.0" />
+        </div>
+
+        <div class="field">
+          <label for="glucose_mean">Glucose Mean</label>
+          <input type="number" step="0.1" id="glucose_mean" value="138.0" />
+        </div>
+
+        <div class="field">
+          <label for="sleep_mean">Sleep Mean</label>
+          <input type="number" step="0.1" id="sleep_mean" value="5.7" />
+        </div>
+
+        <div class="field">
+          <label for="hr_trend">HR Trend</label>
+          <input type="number" step="0.01" id="hr_trend" value="0.06" />
+        </div>
+
+        <div class="field">
+          <label for="glucose_trend">Glucose Trend</label>
+          <input type="number" step="0.01" id="glucose_trend" value="0.04" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button onclick="predictRisk()">Predict</button>
+      </div>
+
+      <div id="error" class="error"></div>
+
+      <div id="result" class="result" style="display: none">
+        <h2>Prediction Result</h2>
+        <div class="row">
+          <strong>Risk Probability:</strong> <span id="risk_probability"></span>
+        </div>
+        <div class="row">
+          <strong>Predicted Class:</strong> <span id="predicted_class"></span>
+        </div>
+        <div class="row">
+          <strong>Risk Label:</strong> <span id="risk_label"></span>
+        </div>
+        <div class="row">
+          <strong>Risk Level:</strong> <span id="risk_level"></span>
+        </div>
+        <div class="row">
+          <strong>Health Insight:</strong> <span id="health_insight"></span>
+        </div>
+        <div class="row">
+          <strong>Recommendation:</strong> <span id="recommendation"></span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function predictRisk() {
+        const errorBox = document.getElementById("error");
+        const resultBox = document.getElementById("result");
+        errorBox.textContent = "";
+        resultBox.style.display = "none";
+
+        const payload = {
+          age: parseInt(document.getElementById("age").value),
+          gender: document.getElementById("gender").value,
+          bmi: parseFloat(document.getElementById("bmi").value),
+          activity_level: parseFloat(
+            document.getElementById("activity_level").value,
+          ),
+          medical_history: document.getElementById("medical_history").value,
+          hr_mean: parseFloat(document.getElementById("hr_mean").value),
+          hr_std: parseFloat(document.getElementById("hr_std").value),
+          bp_mean: parseFloat(document.getElementById("bp_mean").value),
+          glucose_mean: parseFloat(
+            document.getElementById("glucose_mean").value,
+          ),
+          sleep_mean: parseFloat(document.getElementById("sleep_mean").value),
+          hr_trend: parseFloat(document.getElementById("hr_trend").value),
+          glucose_trend: parseFloat(
+            document.getElementById("glucose_trend").value,
+          ),
+        };
+
+        try {
+          const response = await fetch("http://127.0.0.1:8000/predict", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.detail || "Prediction failed");
+          }
+
+          document.getElementById("risk_probability").textContent =
+            data.risk_probability;
+          document.getElementById("predicted_class").textContent =
+            data.predicted_class;
+          document.getElementById("risk_label").textContent = data.risk_label;
+          document.getElementById("risk_level").textContent = data.risk_level;
+          document.getElementById("health_insight").textContent =
+            data.health_insight;
+          document.getElementById("recommendation").textContent =
+            data.recommendation;
+
+          resultBox.style.display = "block";
+        } catch (error) {
+          errorBox.textContent = "Error: " + error.message;
+        }
+      }
+    </script>
+  </body>
+</html>

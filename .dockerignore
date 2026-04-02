@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+.git/
+.github/
+.vscode/
+Data/
+data/
+ui/
+digital_health_twin_risk_prediction.ipynb
+README.md
+report.pdf
