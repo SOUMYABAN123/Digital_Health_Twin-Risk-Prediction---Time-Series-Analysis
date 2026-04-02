@@ -1,11 +1,11 @@
-🧬 Digital Health Twin Risk Prediction – Time Series Analysis
-📌 Overview
+# 🧬 Digital Health Twin Risk Prediction – Time Series Analysis
+# 📌 Overview
 
-        This project focuses on disease risk prediction using Digital Health Twin concepts and time-series-based machine learning models. It integrates multiple advanced deep learning and factorization-based techniques to predict health outcomes such as hepatitis, stroke, and depression.
+This project focuses on disease risk prediction using Digital Health Twin concepts and time-series-based machine learning models. It integrates multiple advanced deep learning and factorization-based techniques to predict health outcomes such as hepatitis, stroke, and depression.
 
 The repository combines healthcare datasets, predictive modeling, and representation learning to simulate patient-specific digital twins for improved diagnosis and risk assessment.
 
-🚀 Key Features
+# 🚀 Key Features
 1.Multiple ML/DL models for healthcare prediction
 2.Time-series and tabular health data analysis
 3.Digital Twin-based smart healthcare framework
@@ -18,7 +18,7 @@ The repository combines healthcare datasets, predictive modeling, and representa
 10.Logistic Regression
 11.Deep Neural Networks
 
-🗂️ Project Structure
+/* 🗂️ Project Structure
 ├── data/
 │ ├── ALF_Data.csv
 │ ├── healthcare-dataset-stroke-data.csv
@@ -39,7 +39,7 @@ The repository combines healthcare datasets, predictive modeling, and representa
 │ ├── evaluation_metrics
 │ ├── plots
 │
-└── README.md
+└── README.md */
 
 📊 Datasets Used
 Hepatitis Prediction Dataset
